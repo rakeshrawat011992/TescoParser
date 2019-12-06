@@ -1,8 +1,10 @@
 require "tescoParser/version"
-require StoreDataTesco
 
 module TescoParser
   class Error < StandardError;
+  end
+  class StoreDataTesco
+    attr_accessor :productname, :productquantity, :unitprice, :discount, :totalprice
   end
 
     @@products = nil
