@@ -125,4 +125,8 @@ module TescoParser
 
   end
 
+  def self.parseData(myarray)
+    TescoParsercls.parseTheData(myarray)
+  end
+
 end
