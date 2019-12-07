@@ -7,35 +7,38 @@ module TescoParser
     attr_accessor :productname, :productquantity, :unitprice, :discount, :totalprice
   end
 
+  class TescoParsercls
+
+
     @@products = nil
     @@breaktheLoop = false
 
-    def isPreviousLineTotal(data, rowindex)
+    def self.isPreviousLineTotal(data, rowindex)
       rowindex > 0 && data[rowindex - 1]['text'].downcase == 'Total'.downcase
     end
 
-    def isPreviousTextReducedPrice(data, rowindex)
+    def self.isPreviousTextReducedPrice(data, rowindex)
       rowindex > 0 && isReducedPrice(data[rowindex - 1]['text'])
     end
 
-    def isReducedPrice(text)
+    def self.isReducedPrice(text)
       text.match(/REDUCED PRICE/) || text.match(/PRICE/) || text.match(/REDUCED/)
     end
 
-    def isCardOrCashSale(text)
+    def self.isCardOrCashSale(text)
       text.include?('VISA TRAVEL SALE') || text.include?('CASH') || text.include?('CHANGE DUE')  || text.include?('SALE')
     end
 
-    def isLineAPrice(text)
+    def self.isLineAPrice(text)
       text.match(/EUR+([0-9]*[,])?([0-9]*[.])?+[0-9]+/) || text.match(/EUR+([O]*[,])?([O]*[.])?+[0-9]+/) ||
           text.match(/EUR+([0-9]*+\s+[.])?([0-9]*[.])?+[0-9]+/)
     end
 
-    def isLineAUnitPrice(data, rowindex)
+    def self.isLineAUnitPrice(data, rowindex)
       isLineAPrice(data[rowindex + 1]['text']) && isLineAPrice(data[rowindex]['text'])
     end
 
-    def isAKeyWord(text)
+    def self.isAKeyWord(text)
       isAKeyWord = false
       if text.size == 1 && text.match(/[a-cA-C]/)
         isAKeyWord = true
@@ -55,7 +58,7 @@ module TescoParser
       isAKeyWord
     end
 
-    def getRelatedData(text, data, rowindex)
+    def self.getRelatedData(text, data, rowindex)
 
       if !isReducedPrice(text)
         if !@@products.empty? && isPreviousTextReducedPrice(data, rowindex)
@@ -93,9 +96,7 @@ module TescoParser
       end
     end
 
-    def parseTheData(textresult)
-
-
+    def self.parseTheData(textresult)
 
       @@products = []
       rowindex = 0
@@ -121,4 +122,7 @@ module TescoParser
       end
       @@products
     end
+
+  end
+
 end
